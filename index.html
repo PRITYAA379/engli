@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1020">
+<title>Englify | English Learning</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;padding:25px 15px;
+ display:grid;place-items:center;
+ font-family:Arial,sans-serif;color:#f5f7ff;
+ background:radial-gradient(circle at top,#25345d,#0b1020 65%);
+}
+.app{width:min(100%,720px)}
+header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.logo{
+ width:45px;height:45px;border-radius:14px;
+ display:grid;place-items:center;font-size:23px;font-weight:bold;
+ color:#10172a;background:linear-gradient(135deg,#a9b5ff,#69e6d7)
+}
+.brand{font-size:21px;font-weight:bold;letter-spacing:3px}
+.panel{
+ background:#151e35;border:1px solid #ffffff20;
+ border-radius:23px;padding:30px;
+ box-shadow:0 20px 60px #0006;
+}
+.eyebrow{color:#70e8d9;font-size:11px;letter-spacing:3px}
+h1{font-size:clamp(30px,6vw,46px);margin:14px 0}
+p{color:#aab5cc;line-height:1.6}
+.permissions{
+ display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:25px 0
+}
+.permission{
+ padding:18px;border:1px solid #ffffff20;
+ border-radius:16px;background:#ffffff08
+}
+.permission h3{font-size:15px}
+.permission p{font-size:12px;margin-bottom:0}
+button{
+ border:0;border-radius:12px;padding:15px 18px;
+ font-weight:bold;cursor:pointer;font-size:14px
+}
+.primary{
+ width:100%;color:#10172a;
+ background:linear-gradient(100deg,#a9b5ff,#70e8d9)
+}
+.secondary{background:#ffffff15;color:white;border:1px solid #ffffff25}
+button:disabled{opacity:.5;cursor:not-allowed}
+.notice{
+ background:#8b9cff15;border:1px solid #8b9cff50;
+ padding:14px;border-radius:12px;font-size:13px;
+ line-height:1.6;color:#dce2ff
+}
+.status{margin-top:15px;color:#aab5cc;font-size:13px;line-height:1.5}
+.good{color:#70e8d9}
+.error{color:#ff9caa}
+.hidden{display:none!important}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:20px}
+.card{
+ padding:15px;border:1px solid #ffffff20;
+ border-radius:15px;background:#ffffff08;min-width:0
+}
+.card h3{font-size:14px}
+video{
+ width:100%;aspect-ratio:4/3;object-fit:cover;
+ border-radius:10px;background:#050812
+}
+.coordinates{
+ white-space:pre-line;overflow-wrap:anywhere;
+ font-family:monospace;font-size:13px;line-height:1.8
+}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.small{font-size:11px;color:#8592ad;margin-top:20px}
+@media(max-width:550px){
+ .permissions,.grid{grid-template-columns:1fr}
+ .panel{padding:21px}
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+
+<header>
+ <div class="logo">E</div>
+ <div>
+  <div class="brand">ENGLIFY</div>
+  <div style="color:#aab5cc;font-size:12px">
+   Speak clearly. Think confidently.
+  </div>
+ </div>
+</header>
+
+<section class="panel" id="intro">
+ <div class="eyebrow">YOUR LEARNING SESSION</div>
+
+ <h1>Build your English confidence.</h1>
+
+ <p>
+ Welcome to Englify. Before entering your learning session,
+ you can grant camera and location permissions.
+ </p>
+
+ <div class="permissions">
+
+  <div class="permission">
+   <div style="font-size:25px">📷</div>
+   <h3>Camera Access</h3>
+   <p>
+    Displays a live camera preview.
+    This demo does not record or upload video.
+   </p>
+  </div>
+
+  <div class="permission">
+   <div style="font-size:25px">📍</div>
+   <h3>Location Access</h3>
+   <p>
+    Reads your current device location
+    and displays coordinates in this session.
+   </p>
+  </div>
+
+ </div>
+
+ <div class="notice">
+  <b>Privacy notice:</b>
+  Camera and location are requested only after you click Continue.
+  Both permissions are required to enter this prototype.
+  You can stop the camera or revoke permissions through browser settings.
+  No device data is uploaded by this demo.
+ </div>
+
+ <button class="primary" id="continueBtn" style="margin-top:20px">
+  Continue and Request Permissions
+ </button>
+
+ <div class="status" id="status" role="status" aria-live="polite">
+  Waiting for your permission.
+ </div>
+</section>
+
+<section class="panel hidden" id="session">
+
+ <div class="eyebrow">PERMISSION CHECK COMPLETE</div>
+
+ <h1>Your session is ready.</h1>
+
+ <p>
+ Both permissions were granted. Your camera preview
+ and location information are displayed below.
+ </p>
+
+ <div class="grid">
+
+  <div class="card">
+   <h3>Camera Preview</h3>
+   <video id="camera" autoplay muted playsinline></video>
+   <div class="status good" id="cameraStatus">
+    Camera active.
+   </div>
+  </div>
+
+  <div class="card">
+   <h3>Location Details</h3>
+   <div class="coordinates" id="location">
+    Waiting for location...
+   </div>
+   <div class="status" id="locationStatus">
+    Location received.
+   </div>
+  </div>
+
+ </div>
+
+ <div class="actions">
+  <button class="secondary" id="stopCamera">Stop Camera</button>
+  <button class="secondary" id="endSession">End Session</button>
+ </div>
+
+ <div class="small">
+  Englify V1 — Device permission prototype.
+  AI English tutor integration is coming next.
+ </div>
+
+</section>
+</main>
+
+<script>
+const intro = document.getElementById("intro");
+const session = document.getElementById("session");
+const continueBtn = document.getElementById("continueBtn");
+
+const camera = document.getElementById("camera");
+const status = document.getElementById("status");
+
+let cameraStream = null;
+
+function stopCamera(){
+ if(cameraStream){
+  cameraStream.getTracks().forEach(track => track.stop());
+  cameraStream = null;
+ }
+ camera.srcObject = null;
+ document.getElementById("cameraStatus").textContent =
+  "Camera stopped.";
+}
+
+function endSession(){
+ stopCamera();
+ session.classList.add("hidden");
+ intro.classList.remove("hidden");
+ continueBtn.disabled = false;
+ status.textContent = "Session ended. Camera is off.";
+}
+
+function requestLocation(){
+ return new Promise((resolve,reject)=>{
+
+  if(!navigator.geolocation){
+   reject(new Error("Geolocation is not supported."));
+   return;
+  }
+
+  document.getElementById("locationStatus").textContent =
+   "Waiting for location permission...";
+
+  navigator.geolocation.getCurrentPosition(
+   position=>{
+
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    const accuracy = position.coords.accuracy;
+
+    document.getElementById("location").textContent =
+     "Latitude: " + latitude.toFixed(6) +
+     "\nLongitude: " + longitude.toFixed(6) +
+     "\nAccuracy: approximately " +
+     Math.round(accuracy) + " metres";
+
+    document.getElementById("locationStatus").textContent =
+     "Location permission granted.";
+
+    resolve();
+
+   },
+
+   error=>{
+
+    const messages = {
+     1:"Location permission denied.",
+     2:"Location unavailable.",
+     3:"Location request timed out."
+    };
+
+    reject(new Error(messages[error.code] ||
+     "Could not retrieve location."));
+   },
+
+   {
+    enableHighAccuracy:true,
+    timeout:15000,
+    maximumAge:0
+   }
+  );
+ });
+}
+
+async function startSession(){
+
+ continueBtn.disabled = true;
+ status.textContent = "Requesting camera permission...";
+
+ if(!navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia){
+
+  status.textContent =
+   "Camera requires HTTPS and a supported browser.";
+  status.className = "status error";
+  continueBtn.disabled = false;
+  return;
+ }
+
+ try{
+
+  cameraStream = await navigator.mediaDevices.getUserMedia({
+   video:{facingMode:"user"},
+   audio:false
+  });
+
+  camera.srcObject = cameraStream;
+
+  document.getElementById("cameraStatus").textContent =
+   "Camera active.";
+
+  status.textContent = "Camera allowed. Requesting location...";
+
+  await requestLocation();
+
+  intro.classList.add("hidden");
+  session.classList.remove("hidden");
+
+ }catch(error){
+
+  stopCamera();
+
+  status.textContent = error.message ||
+   "Permission was not granted. Please check browser settings.";
+
+  status.className = "status error";
+  continueBtn.disabled = false;
+
+ }
+}
+
+continueBtn.addEventListener("click",startSession);
+
+document.getElementById("stopCamera")
+ .addEventListener("click",stopCamera);
+
+document.getElementById("endSession")
+ .addEventListener("click",endSession);
+
+window.addEventListener("pagehide",stopCamera);
+</script>
+
+</body>
+</html>
